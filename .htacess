@@ -1,0 +1,10 @@
+ErrorDocument 404 /template/not-found-page.html
+RewriteEngine On
+
+# Odstraňte příponu .php z URL
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Skrývání složek v URL
+RewriteRule ^(.*)/$ $1 [L,R=301]
