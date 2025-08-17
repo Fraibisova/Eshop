@@ -45,7 +45,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Authorization: Basic ' . $basic_auth,
     'Content-Type: application/x-www-form-urlencoded',
     'Accept: application/json',
-    'User-Agent: TvujNazevAplikace (tvuj@email.cz)'
+    'User-Agent: Nazev (email)'
 ]);
 
 $response = curl_exec($ch);

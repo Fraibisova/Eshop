@@ -1,10 +1,5 @@
-# robots.txt pro PHP Eshop
-# Ulo�te jako robots.txt do root adres�re va�eho eshopu
-
-# Povolen� pro v�echny roboty
 User-agent: *
 
-# Zak�zan� adres�re a soubory
 Disallow: /admin/
 Disallow: /includes/
 Disallow: /config/
@@ -17,7 +12,6 @@ Disallow: /cron/
 Disallow: /vendor/
 Disallow: /node_modules/
 
-# Zak�zan� eshop specifick� str�nky
 Disallow: /checkout/
 Disallow: /cart/
 Disallow: /kosik/
@@ -30,7 +24,6 @@ Disallow: /wishlist/
 Disallow: /compare/
 Disallow: /porovnani/
 
-# Zak�zan� parametry a filtry
 Disallow: /*?sort=
 Disallow: /*?filter=
 Disallow: /*?page=
@@ -40,33 +33,27 @@ Disallow: /*?ref=
 Disallow: /*?gclid=
 Disallow: /*?fbclid=
 
-# Zak�zan� duplik�tn� obsah
 Disallow: /print/
 Disallow: /pdf/
 Disallow: /*?print=1
 
-# Povolen� dule�it� soubory
 Allow: /css/
 Allow: /js/
 Allow: /img/
 Allow: /sitemap.xml
 Allow: /sitemap.php
 
-# Speci�ln� pravidla pro Googlebot
 User-agent: Googlebot
 Allow: /css/
 Allow: /js/
 Allow: /img/
 
-# Pravidla pro Facebook crawler
 User-agent: facebookexternalhit
 Allow: /img/
 
-# Crawl-delay pro v�echny ostatn� boty
 User-agent: *
 Crawl-delay: 1
 
-# Sitemap
 Sitemap: https://touchthemagic.com/sitemap.xml
 Sitemap: https://touchthemagic.com/sitemap.php
 

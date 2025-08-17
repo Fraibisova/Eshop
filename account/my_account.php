@@ -84,7 +84,6 @@
                     <select name="country_code" class="search-button country" required>
                         <option value="+420" <?php echo (isset($_SESSION['country_code']) && $_SESSION['country_code'] == '+420') ? 'selected' : ''; ?>>+420</option>
                         <!--<option value="+1" <?php echo (isset($_SESSION['country_code']) && $_SESSION['country_code'] == '+1') ? 'selected' : ''; ?>>+1</option>-->
-                        <!-- Add more country codes as needed -->
                     </select>
                     <input type="tel" name="phone_new" placeholder="123456789" pattern="[0-9]+" class="search-input" value="<?php echo htmlspecialchars($_SESSION['phone_new'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
                 </div>

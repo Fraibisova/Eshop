@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         finalPriceElement.textContent = `Celková cena: ${newTotal} Kč`;
-        localStorage.setItem('finalPrice', newTotal); // Uložíme novou cenu do localStorage
+        localStorage.setItem('finalPrice', newTotal); 
     }
     
     function openZasilkovnaWidget() {

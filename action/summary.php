@@ -126,7 +126,7 @@ if (isset($_SESSION['user_info']['email']) && !empty($_SESSION['user_info']['ema
     $_SESSION['email_message'] = $emailResult['message'];
 }
 
-$adminEmail = "fraibisovab@gmail.com"; 
+$adminEmail = "email"; 
 if (!empty($adminEmail)) {
     $adminEmailBody = prepareAdminNotificationEmailFixed($_SESSION['user_info'], $bought_items, $totalPrice, $orderNumber);
     $adminSubject = "NOVÁ OBJEDNÁVKA č. " . $orderNumber . " - Touch The Magic";

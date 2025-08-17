@@ -21,9 +21,9 @@ if (!function_exists('env')) {
 $config = [
     'database' => [
         'host' => env('DB_HOST', 'host'),
-        'dbname' => env('DB_NAME', 'nazev-db'),
-        'username' => env('DB_USERNAME', 'username'),
-        'password' => env('DB_PASSWORD', 'heslo'),
+        'dbname' => env('DB_NAME', 'db_name'),
+        'username' => env('DB_USERNAME', 'db_user'),
+        'password' => env('DB_PASSWORD', 'db_password'),
         'options' => [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -31,12 +31,12 @@ $config = [
         ]
     ],
     'fakturoid' => [
-        'account' => env('FAKTUROID_ACCOUNT', 'nazev-uctu'),
-        'client_id' => env('FAKTUROID_CLIENT_ID', 'fakturoid-client-id'),
-        'client_secret' => env('FAKTUROID_CLIENT_SECRET', 'fakturoid-client-secret'),
-        'redirect_uri' => env('FAKTUROID_REDIRECT_URI', 'redirect-url'),
+        'account' => env('FAKTUROID_ACCOUNT', 'account_name'),
+        'client_id' => env('FAKTUROID_CLIENT_ID', 'client_id'),
+        'client_secret' => env('FAKTUROID_CLIENT_SECRET', 'client_secret'),
+        'redirect_uri' => env('FAKTUROID_REDIRECT_URI', 'redirect_uri'),
         'email' => env('FAKTUROID_EMAIL', 'email'),
-        'user_agent' => env('FAKTUROID_USER_AGENT', 'user-agent'),
+        'user_agent' => env('FAKTUROID_USER_AGENT', 'User-agent'),
         'auto_send_invoice' => true,
         'payment_method' => 'bank',
         'due_days' => 14,
@@ -44,9 +44,9 @@ $config = [
     ],
     'gopay' => [
         'goid' => (int)env('GOPAY_GOID', 'goid'),
-        'client_id' => (int)env('GOPAY_CLIENT_ID', 'client-id'),
-        'client_secret' => env('GOPAY_CLIENT_SECRET', 'client-secret'),
-        'gateway_url' => env('GOPAY_GATEWAY_URL', 'gateway-url')
+        'client_id' => (int)env('GOPAY_CLIENT_ID', 'client_id'),
+        'client_secret' => env('GOPAY_CLIENT_SECRET', 'client_secret'),
+        'gateway_url' => env('GOPAY_GATEWAY_URL', 'https://gate.gopay.cz/api')
     ]
 ];
 

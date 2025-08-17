@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' and $_SESSION['role'] == 10) {
 
     <h1>Seznam produktů</h1>
 
-    <table border="1" cellpadding="10">
+    <table>
         <thead>
             <tr>
                 <th>ID</th>

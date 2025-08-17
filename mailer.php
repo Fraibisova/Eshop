@@ -17,7 +17,7 @@ function getMailer() {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'email'; 
-        $mail->Password   = 'email-heslo'; 
+        $mail->Password   = 'heslo'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 

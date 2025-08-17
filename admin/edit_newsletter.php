@@ -86,12 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (empty($scheduled_at)) {
                         $message = "Pro naplánování musíte zadat datum a čas";
                     } else {
-                        // Kontrola zda čas již neprošel
                         $scheduled_timestamp = strtotime($scheduled_at);
                         $current_timestamp = time();
                         
                         if ($scheduled_timestamp <= $current_timestamp) {
-                            // Čas již prošel, odeslat okamžitě
                             $newsletter_id = saveNewsletter($title, $template_for_save, 'sending', $scheduled_at, $id);
                             if ($newsletter_id) {
                                 $sent_count = sendNewsletterToSubscribers($newsletter_id, $title, $template_for_save);

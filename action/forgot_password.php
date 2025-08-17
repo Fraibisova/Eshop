@@ -10,7 +10,7 @@ session_start();
 $aggregated_cart = aggregateCart();
 $endprice = calculateCartPrice($aggregated_cart, $db);
 header_html($aggregated_cart, "login.php");
-$token = 'aadb2a2bbee2819faec1dbe873339b5c';
+$token = 'token';
 $token_hash = hash("sha256", $token);
 $sql = "SELECT * FROM users WHERE reset_token_hash = ?";
 $stmt = $pdo->prepare($sql);

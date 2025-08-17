@@ -18,27 +18,26 @@ class FakturoidService {
         $timezone = new DateTimeZone('Europe/Prague');
         $currentDate = new DateTime('now', $timezone);
 
-        // Urči splatnost podle způsobu platby
         $paymentMethod = $order['payment_method'] ?? 'bank_transfer';
 
         switch ($paymentMethod) {
             case 'card':
             case 'online_card':
-                $dueDays = 0; // Splatnost ihned
+                $dueDays = 0; 
                 $paymentMethodValue = 'card';
                 $showBankDetails = false;
                 break;
 
             case 'Dobírka':
             case 'cash_on_delivery':
-                $dueDays = 0; // Dobírka se platí ihned při převzetí
+                $dueDays = 0;
                 $paymentMethodValue = 'cod';
                 $showBankDetails = false;
                 break;
 
             case 'bank_transfer':
             default:
-                $dueDays = 14; // Splatnost 14 dní
+                $dueDays = 14;
                 $paymentMethodValue = 'bank';
                 $showBankDetails = true;
                 break;
@@ -47,9 +46,9 @@ class FakturoidService {
         $invoiceData = [
             'subject_id' => $subject['id'],
             'lines' => $this->prepareInvoiceLines($order),
-            'due' => $dueDays, // Splatnost v dnech
+            'due' => $dueDays,
             'issued_on' => $currentDate->format('Y-m-d'),
-            'payment_method' => $paymentMethodValue, // Způsob platby
+            'payment_method' => $paymentMethodValue,
             'note' => $order['note'] ?? null
         ];
 
@@ -58,10 +57,8 @@ class FakturoidService {
         if ($result['success']) {
             $invoice = $result['data'];
             
-            // Stáhni a ulož PDF faktury
             $pdfSaved = $this->saveInvoicePDF($invoice);
             
-            // Uložit číslo faktury do objednávky
             $this->updateOrderWithInvoice($order['order_number'], $invoice, $pdfSaved);
             
             return [
@@ -74,17 +71,12 @@ class FakturoidService {
         throw new Exception('Failed to create invoice: ' . json_encode($result['data']));
     }
     
-    /**
-     * Vytvoří nebo najde kontakt v Fakturoid
-     */
     private function createOrFindSubject($order) {
         $subjectData = $this->prepareSubjectData($order);
 
-        // Zkus najít existujícího zákazníka
         $existingSubject = $this->findSubjectByEmail($order['customer_email']);
 
         if ($existingSubject) {
-            // Aktualizuj existujícího zákazníka s aktuálními údaji z objednávky
             $result = $this->client->createOrUpdateSubject(
                 array_merge(['id' => $existingSubject['id']], $subjectData)
             );
@@ -96,7 +88,6 @@ class FakturoidService {
             throw new Exception('Failed to update subject: ' . json_encode($result['data']));
         }
 
-        // Pokud neexistuje, vytvoř nový
         $result = $this->client->createOrUpdateSubject($subjectData);
 
         if ($result['success']) {
@@ -107,9 +98,6 @@ class FakturoidService {
     }
 
     
-    /**
-     * Najde kontakt podle emailu
-     */
     private function findSubjectByEmail($email) {
         $result = $this->client->getSubjects(['email' => $email]);
         
@@ -120,9 +108,6 @@ class FakturoidService {
         return null;
     }
     
-    /**
-     * Aktualizuje objednávku s informacemi o faktuře
-     */
     private function updateOrderWithInvoice($order_number, $invoice, $pdfSaved) {
         global $db;
 
@@ -145,9 +130,6 @@ class FakturoidService {
 
     }
     
-    /**
-     * Připraví data zákazníka
-     */
     private function prepareSubjectData($order) {
         $subject = [
             'name' => $order['customer_name'],
@@ -158,7 +140,6 @@ class FakturoidService {
             'email' => $order['customer_email']
         ];
         
-        // Pokud je to firma, přidej IČO/DIČ
         if (!empty($order['company_name'])) {
             $subject['name'] = $order['company_name'];
             $subject['registration_no'] = $order['company_ico'] ?? null;
@@ -168,22 +149,16 @@ class FakturoidService {
         return $subject;
     }
     
-    /**
-     * Připraví položky faktury
-     */
     private function prepareInvoiceLines($order) {
         $lines = [];
         $groupedItems = [];
                 
-        // Seskup stejné položky podle názvu a ceny
         foreach ($order['items'] as $item) {
-            $key = $item['name'] . '_' . $item['price']; // Klíč pro seskupení
+            $key = $item['name'] . '_' . $item['price']; 
             
             if (isset($groupedItems[$key])) {
-                // Přičti množství k existující položce
                 $groupedItems[$key]['quantity'] += isset($item['quantity']) ? $item['quantity'] : 1;
             } else {
-                // Vytvoř novou položku
                 $groupedItems[$key] = [
                     'name' => $item['name'],
                     'quantity' => isset($item['quantity']) ? $item['quantity'] : 1,
@@ -194,7 +169,6 @@ class FakturoidService {
             }
         }
         
-        // Převeď seskupené položky na formát pro fakturu
         foreach ($groupedItems as $item) {
             $lines[] = [
                 'name' => $item['name'],
@@ -226,16 +200,11 @@ class FakturoidService {
         return $lines;
     }
     
-    /**
-     * Stáhne a uloží PDF faktury do složky invoices
-     */
     private function saveInvoicePDF($invoice) {
     try {
-        // Získej absolutní cestu k aktuálnímu adresáři
         $currentDir = getcwd();
         $invoiceDir = $currentDir . DIRECTORY_SEPARATOR . 'invoices';
         
-        // Zkontroluj a vytvoř složku invoices
         if (!is_dir($invoiceDir)) {
             
             if (!mkdir($invoiceDir, 0755, true)) {
@@ -245,30 +214,25 @@ class FakturoidService {
             
         }
         
-        // Zkontroluj oprávnění pro zápis
         if (!is_writable($invoiceDir)) {
             $error = "Directory is not writable: " . $invoiceDir;
             return ['success' => false, 'error' => $error];
         }
         
-        // Vygeneruj název souboru
         $filename = $this->generateInvoiceFilename($invoice);
         $filepath = $invoiceDir . DIRECTORY_SEPARATOR . $filename;
         
-        // Implementuj retry mechanismus - PDF může potřebovat čas na generování
         $maxRetries = 5;
         $retryDelay = 2; // sekundy
         
         for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {            
-            // Stáhni PDF z Fakturoid
             $result = $this->client->downloadInvoicePDF($invoice['id']);
             
-            // Pokud je HTTP 204, PDF ještě není připravené
             if ($result['status'] === 204) {
                 
                 if ($attempt < $maxRetries) {
                     sleep($retryDelay);
-                    $retryDelay *= 2; // Exponential backoff
+                    $retryDelay *= 2; 
                     continue;
                 } else {
                     return [
@@ -283,7 +247,6 @@ class FakturoidService {
                 }
             }
             
-            // Pokud je jiná chyba než 204, ukončí retry
             if (!$result['success']) {
                 return [
                     'success' => false, 
@@ -296,10 +259,8 @@ class FakturoidService {
                 ];
             }
             
-            // Pokud je odpověď úspěšná, zpracuj PDF
             $pdfContent = $result['data'];
             
-            // Zkontroluj, jestli je odpověď prázdná
             if (empty($pdfContent)) {
                 
                 if ($attempt < $maxRetries) {
@@ -319,12 +280,10 @@ class FakturoidService {
                 }
             }
             
-            // Zkontroluj content-type
             $contentType = $result['content_type'] ?? '';
             if (strpos($contentType, 'application/pdf') === false && 
                 strpos($contentType, 'application/octet-stream') === false) {
                 
-                // Pokud je to JSON s chybou
                 if (strpos($contentType, 'application/json') !== false || 
                     (is_string($pdfContent) && substr($pdfContent, 0, 1) === '{')) {
                     
@@ -341,12 +300,10 @@ class FakturoidService {
                 }
             }
             
-            // Pokud je to string a vypadá jako base64, dekóduj
             if (is_string($pdfContent) && base64_encode(base64_decode($pdfContent, true)) === $pdfContent) {
                 $pdfContent = base64_decode($pdfContent);
             }
             
-            // Validuj, že je to skutečně PDF
             if (is_string($pdfContent) && substr($pdfContent, 0, 4) !== '%PDF') {
                 
                 if ($attempt < $maxRetries) {
@@ -368,15 +325,12 @@ class FakturoidService {
             }
 
             
-            // Ulož soubor
             $saved = file_put_contents($filepath, $pdfContent);
             
             if ($saved !== false && $saved > 0) {
-                // Ověř, že se soubor skutečně uložil
                 if (file_exists($filepath)) {
                     $actualSize = filesize($filepath);
                     
-                    // Zkontroluj oprávnění souboru
                     $perms = substr(sprintf('%o', fileperms($filepath)), -4);
                     
                     return [
@@ -450,14 +404,10 @@ class FakturoidService {
     }
 }
     
-    /**
-     * Vygeneruje název souboru pro fakturu
-     */
     private function generateInvoiceFilename($invoice) {
         $invoiceNumber = $invoice['number'] ?? $invoice['id'];
         $date = date('Y-m-d');
         
-        // Pokusíme se získat jméno zákazníka z různých možných míst
         $customerName = 'Unknown';
         if (isset($invoice['subject']['name'])) {
             $customerName = $invoice['subject']['name'];
@@ -470,33 +420,21 @@ class FakturoidService {
         
         $customerName = $this->sanitizeFilename($customerName);
         
-        // Formát: faktura_2024001_2024-01-15_Jan-Novak.pdf
         return "faktura_{$invoiceNumber}_{$date}_{$customerName}.pdf";
     }
     
-    /**
-     * Vyčistí název souboru od nepovolených znaků
-     */
     private function sanitizeFilename($filename) {
-        // Odstraň diakritiku
         $filename = iconv('UTF-8', 'ASCII//TRANSLIT', $filename);
         
-        // Nahraď nepovolené znaky
         $filename = preg_replace('/[^a-zA-Z0-9\-_]/', '-', $filename);
         
-        // Odstraň vícenásobné pomlčky
         $filename = preg_replace('/-+/', '-', $filename);
         
-        // Ořízni pomlčky ze začátku a konce
         $filename = trim($filename, '-');
         
-        // Omez délku
         return substr($filename, 0, 50);
     }
     
-    /**
-     * Označí fakturu jako zaplacenou
-     */
     public function markInvoicePaid($invoiceId, $paymentAmount, $paymentDate = null) {
         $paymentData = [
             'paid_amount' => $paymentAmount,
@@ -506,9 +444,6 @@ class FakturoidService {
         return $this->client->markInvoicePaid($invoiceId, $paymentData);
     }
     
-    /**
-     * Získá PDF faktury jako base64
-     */
     public function getInvoicePDF($invoiceId) {
         $result = $this->client->downloadInvoicePDF($invoiceId);
         
@@ -531,9 +466,6 @@ class FakturoidClient {
         $this->baseUrl = "https://app.fakturoid.cz/api/v3/accounts/{$subdomain}";
     }
     
-    /**
-     * Provede HTTP požadavek na Fakturoid API
-     */
     private function makeRequest($endpoint, $method = 'GET', $data = null) {
         $url = $this->baseUrl . '/' . ltrim($endpoint, '/');
         $accessToken = $this->tokenManager->getValidAccessToken();
@@ -585,31 +517,19 @@ class FakturoidClient {
         ];
     }
     
-    /**
-     * Vytvorí novou fakturu
-     */
     public function createInvoice($invoiceData) {
         return $this->makeRequest('/invoices', 'POST', $invoiceData);
     }
     
-    /**
-     * Získá fakturu podle ID
-     */
     public function getInvoice($invoiceId) {
         return $this->makeRequest("/invoices/{$invoiceId}");
     }
     
-    /**
-     * Získá seznam faktur
-     */
     public function getInvoices($params = []) {
         $query = !empty($params) ? '?' . http_build_query($params) : '';
         return $this->makeRequest("/invoices{$query}");
     }
     
-    /**
-     * Stáhne PDF faktury
-     */
     public function downloadInvoicePDF($invoiceId) {
         $url = $this->baseUrl . "/invoices/{$invoiceId}/download.pdf";
         $accessToken = $this->tokenManager->getValidAccessToken();
@@ -623,7 +543,7 @@ class FakturoidClient {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Zvýšený timeout pro PDF
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         
@@ -645,31 +565,19 @@ class FakturoidClient {
         ];
     }
     
-    /**
-     * Oznací fakturu jako zaplacenou
-     */
     public function markInvoicePaid($invoiceId, $paymentData) {
         return $this->makeRequest("/invoices/{$invoiceId}/payments", 'POST', $paymentData);
     }
     
-    /**
-     * Vytvorí nebo aktualizuje kontakt
-     */
     public function createOrUpdateSubject($subjectData) {
         return $this->makeRequest('/subjects', 'POST', $subjectData);
     }
     
-    /**
-     * Získá seznam kontaktů
-     */
     public function getSubjects($params = []) {
         $query = !empty($params) ? '?' . http_build_query($params) : '';
         return $this->makeRequest("/subjects{$query}");
     }
     
-    /**
-     * Získá informace o účtu
-     */
     public function getAccount() {
         return $this->makeRequest('/account');
     }
@@ -684,9 +592,6 @@ class TokenManager {
         $this->config = $config;
     }
     
-    /**
-     * Získá platný access token (automaticky obnoví pokud vypršel)
-     */
     public function getValidAccessToken() {
         $token = $this->getStoredToken();
         
@@ -694,26 +599,19 @@ class TokenManager {
             throw new Exception('No token found. Please authorize first.');
         }
         
-        // Zkontroluj zda token nevypršel (s rezervou 5 minut)
         if (time() >= ($token['expires_at'] - 300)) {
             return $this->refreshToken($token['refresh_token']);
         }
         
         return $token['access_token'];
     }
-    
-    /**
-     * Získá uložený token z databáze
-     */
+
     private function getStoredToken() {
         $stmt = $this->db->prepare("SELECT * FROM oauth_tokens WHERE service = 'fakturoid' ORDER BY updated_at DESC LIMIT 1");
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    /**
-     * Obnoví access token pomocí refresh token
-     */
     private function refreshToken($refreshToken) {
         $data = [
             'grant_type' => 'refresh_token',
@@ -760,9 +658,6 @@ class TokenManager {
         return $tokens['access_token'];
     }
     
-    /**
-     * Uloží nové tokeny do databáze
-     */
     public function saveTokens($tokens) {
         $expiresAt = time() + $tokens['expires_in'];
         
@@ -784,7 +679,6 @@ class TokenManager {
     }
 }
 
-// Inicializace
 include 'config.php';
 $config = include 'fakturoid_config.php';
 
@@ -792,12 +686,10 @@ $tokenManager = new TokenManager($db, $config);
 $fakturoidClient = new FakturoidClient($tokenManager, 'beatafraibisova');
 $fakturoidService = new FakturoidService($fakturoidClient);
 
-// Objednávky
 $order = [
-    'order_number' => $_SESSION['user_info']['order_number'] ?? '', // nebo $_SESSION['order_number']
+    'order_number' => $_SESSION['user_info']['order_number'] ?? '',
     'note' => 'Děkujeme za vaši objednávku!',
 
-    // Zákaznické údaje
     'customer_name' => $_SESSION['user_info']['name'] . ' ' . $_SESSION['user_info']['surname'],
     'customer_email' => $_SESSION['user_info']['email'],
     'billing_address' => $_SESSION['user_info']['street'] . ' ' . $_SESSION['user_info']['housenumber'],
@@ -805,22 +697,18 @@ $order = [
     'billing_zip' => $_SESSION['user_info']['zipcode'],
     'billing_country' => $_SESSION['user_info']['country'] ?? 'Česká republika',
 
-    // Položky objednávky
     'items' => $_SESSION['bought_items'] ?? [],
 
-    // Doprava
     'shipping_method' => $_SESSION['methodData']['shipping']['name'] ?? '',
     'shipping_price' => floatval($_SESSION['methodData']['shipping']['price'] ?? 0),
 
-    // Platba (volitelné)
     'payment_method' => $_SESSION['methodData']['payment']['name'] ?? '',
     'payment_price' => floatval($_SESSION['methodData']['payment']['price'] ?? 0),
 
-    // Zásilkovna - pokud je zvolená
     'zasilkovna_branch_id' => $_SESSION['zasilkovna_branch'] ?? '',
     'zasilkovna_branch_name' => $_SESSION['zasilkovna_branch_name'] ?? ''
 ];
-// Použití
+
 try {
     $result = $fakturoidService->createInvoiceFromOrder($order);
     

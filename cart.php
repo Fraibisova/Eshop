@@ -128,7 +128,7 @@ header_html_search($aggregated_cart, "cart.php", 0);
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute(['id' => $id]);
                     $item = $stmt->fetch();
-                    if ($item): // Check if the item exists
+                    if ($item): 
                 ?>
                 <tr class="cart-table-tr">
                     <td>

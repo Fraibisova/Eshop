@@ -266,8 +266,8 @@ ob_end_flush();
         <script>
             document.addEventListener('DOMContentLoaded', function () {
             const popup = document.getElementById('cart-popup-big');
-            const closeBtn = document.querySelector('.close-btn-big'); // Tlačítko pro zavření
-            const continueShoppingBtn = document.getElementById('continue-shopping'); // Tlačítko "Pokračovat v nákupu"
+            const closeBtn = document.querySelector('.close-btn-big');
+            const continueShoppingBtn = document.getElementById('continue-shopping'); 
 
             if (popup) {
                 popup.style.display = 'flex';

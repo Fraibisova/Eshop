@@ -1,5 +1,4 @@
 <?php
-// oauth/callback.php
 if (!defined('APP_ACCESS')) {
     http_response_code(403);
     header('location: ../template/not-found-page.php');
@@ -21,18 +20,17 @@ if (isset($_GET['code'])) {
         'redirect_uri' => $config['redirect_uri']
     ];
 
-    // Vytvoření Basic Auth hlavičky
     $auth = base64_encode($config['client_id'] . ':' . $config['client_secret']);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://app.fakturoid.cz/api/v3/oauth/token');
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // JSON místo form data
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',        // JSON místo form-urlencoded
-        'Accept: application/json',              // Přidáno Accept header
-        'Authorization: Basic ' . $auth,         // Basic Auth místo client_id/secret v těle
+        'Content-Type: application/json',        
+        'Accept: application/json',              
+        'Authorization: Basic ' . $auth,         
         'User-Agent: ' . $config['user_agent']
     ]);
 
@@ -45,7 +43,7 @@ if (isset($_GET['code'])) {
         
         $access_token = $tokenData['access_token'];
         $refresh_token = $tokenData['refresh_token'];
-        $expires_in = $tokenData['expires_in']; // např. 3600 sekund
+        $expires_in = $tokenData['expires_in'];
 
         $expires_at = time() + $expires_in;
         $sql = "
@@ -59,14 +57,13 @@ if (isset($_GET['code'])) {
 
         $stmt = $pdo->prepare($sql);
 
-        // Bind parametry
         $stmt->execute([
             ':access_token' => $access_token,
             ':refresh_token' => $refresh_token,
             ':expires_at' => $expires_at
         ]);
 
-        // header('location: ../fakturoid_service.php');
+        header('location: ../fakturoid_service.php');
     } else {
         echo "Chyba pri autorizaci: " . $response;
     }
