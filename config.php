@@ -20,10 +20,10 @@ if (!function_exists('env')) {
 
 $config = [
     'database' => [
-        'host' => env('DB_HOST', 'host'),
-        'dbname' => env('DB_NAME', 'db_name'),
-        'username' => env('DB_USERNAME', 'db_user'),
-        'password' => env('DB_PASSWORD', 'db_password'),
+        'host' => env('DB_HOST', 'localhost'),
+        'dbname' => env('DB_NAME', 'eshop'),
+        'username' => env('DB_USERNAME', 'root'),
+        'password' => env('DB_PASSWORD', ''),
         'options' => [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -31,21 +31,21 @@ $config = [
         ]
     ],
     'fakturoid' => [
-        'account' => env('FAKTUROID_ACCOUNT', 'account_name'),
-        'client_id' => env('FAKTUROID_CLIENT_ID', 'client_id'),
-        'client_secret' => env('FAKTUROID_CLIENT_SECRET', 'client_secret'),
-        'redirect_uri' => env('FAKTUROID_REDIRECT_URI', 'redirect_uri'),
-        'email' => env('FAKTUROID_EMAIL', 'email'),
-        'user_agent' => env('FAKTUROID_USER_AGENT', 'User-agent'),
+        'account' => env('FAKTUROID_ACCOUNT', 'beatafraibisova'),
+        'client_id' => env('FAKTUROID_CLIENT_ID', 'aea547926c65578c3d4e3aa3b1c8dc4dd067cc02'),
+        'client_secret' => env('FAKTUROID_CLIENT_SECRET', 'd18ce0793c45b8c4633cc1eb6d2085cc97a1f54f'),
+        'redirect_uri' => env('FAKTUROID_REDIRECT_URI', 'https://touchthemagic.com/oauth/callback.php'),
+        'email' => env('FAKTUROID_EMAIL', 'fraibisovab@gmail.com'),
+        'user_agent' => env('FAKTUROID_USER_AGENT', 'info@touchthemagic.com'),
         'auto_send_invoice' => true,
         'payment_method' => 'bank',
         'due_days' => 14,
         'currency' => 'CZK'
     ],
     'gopay' => [
-        'goid' => (int)env('GOPAY_GOID', 'goid'),
-        'client_id' => (int)env('GOPAY_CLIENT_ID', 'client_id'),
-        'client_secret' => env('GOPAY_CLIENT_SECRET', 'client_secret'),
+        'goid' => (int)env('GOPAY_GOID', 8308320361),
+        'client_id' => (int)env('GOPAY_CLIENT_ID', 1763284732),
+        'client_secret' => env('GOPAY_CLIENT_SECRET', 'pdDA9rd3'),
         'gateway_url' => env('GOPAY_GATEWAY_URL', 'https://gate.gopay.cz/api')
     ]
 ];

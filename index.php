@@ -6,7 +6,7 @@ include 'template/template.php';
 include 'lib/function.php';
 ob_start();
 session_start();
-// Initialize the shopping cart if it doesn't exist
+
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
@@ -25,14 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
     if ($product) {
         addToCart($product, $quantity);
         
-        // Sledování přidání do košíku - POUZE s povolenými cookies
         echo "<script>
         if (localStorage.getItem('cookie_consent') === 'accepted') {
             trackAddToCart(" . json_encode($product) . ", " . $quantity . ");
         }
         </script>";
         
-        // Alternativa pro AJAX - vrátit jako JSON response
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
             strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             echo json_encode([
@@ -55,14 +53,11 @@ header_html($aggregated_cart, "index.php");
 print('<div class="container">');
 
 try {
-    // Base query to load only visible items
     $sql = "SELECT * FROM items WHERE visible = 1";
     
-    // Get the category and season from the GET parameters, if they exist
     $cat = isset($_GET['cat']) ? $_GET['cat'] : '';
     $sea = isset($_GET['sea']) ? $_GET['sea'] : '';
     
-    // Prepare conditions for filtering items
     $conditions = [];
     $params = [];
 
@@ -77,6 +72,7 @@ try {
         $params['sea'] = $sea;
         $tittle = category($sea);
     }
+    
     if (!$cat && !$sea) {
         echo get_section_content('slider');
         echo get_section_content('intro_text');
@@ -87,6 +83,16 @@ try {
         $sql .= " AND " . implode(' AND ', $conditions);
     }
 
+    $filter_data = get_filter_conditions();
+    if (!empty($filter_data['conditions'])) {
+        $sql .= " AND " . implode(' AND ', $filter_data['conditions']);
+        if (!empty($filter_data['params'])) {
+            $params = array_merge($params, $filter_data['params']);
+        }
+    }
+
+    $sql .= " " . get_sort_order();
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -95,16 +101,19 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-$location = "?";
-$location .= $cat ? "cat=" . urlencode($cat) . "&" : "";
-$location .= $sea ? "sea=" . urlencode($sea) : "";
+$location = "index.php";
+if ($cat || $sea) {
+    $location .= "?";
+    $location .= $cat ? "cat=" . urlencode($cat) . "&" : "";
+    $location .= $sea ? "sea=" . urlencode($sea) . "&" : "";
+    $location = rtrim($location, '&');
+}
 $name = ' ';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['item_id'])) {
     $name = $_POST['item_name']; 
     $item_id = $_POST['item_id'];
     
-    // Get product data from database
     $sql = "SELECT * FROM items WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $item_id]);
@@ -148,19 +157,9 @@ $name = isset($_SESSION['added_item_name']) ? $_SESSION['added_item_name'] : '';
     ?>
     <?php left_menu_html(); ?>
     <h2 class="margin-h2"><?php print("$tittle"); ?></h2>
-    <?php // V místě kde chcete zobrazit filtry (po kontrole $location)
-        if ($cat || $sea) {
-            // Spočítejte počet produktů pro zobrazení
-            $filter_info = ['count' => count($items)];
-            echo render_product_filters($location, $filter_info);
-        }
-        $filter_data = get_filter_conditions();
-        if (!empty($filter_data['conditions'])) {
-            $sql .= " AND " . implode(' AND ', $filter_data['conditions']);
-        }
-
-        // Přidejte řazení
-        $sql .= " " . get_sort_order();
+    <?php 
+        $filter_info = ['count' => count($items)];
+        echo render_product_filters($location, $filter_info);
     ?>
     <div class="products">
         <?php if (!empty($items)): ?>
@@ -188,7 +187,7 @@ $name = isset($_SESSION['added_item_name']) ? $_SESSION['added_item_name'] : '';
                     
                     <?php if ($item['stock'] == 'Není skladem'): ?>
                         <div class="btn btn-unavailable">
-                            <p class="add-to-cart">Brzy skladem</p>
+                            <p class="add-to-cart">Zboží není dostupné</p>
                         </div>
                     <?php elseif ($item['stock'] == 'Předobjednat'): ?>
                         <form class="add-to-cart-form" method="post" action="">
@@ -213,7 +212,19 @@ $name = isset($_SESSION['added_item_name']) ? $_SESSION['added_item_name'] : '';
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p class="soon">Již brzy.. 😃</p>
+            <?php
+            $has_filters = (isset($_GET['price']) && $_GET['price'] !== '') || 
+                          (isset($_GET['stock']) && $_GET['stock'] !== '') ||
+                          (isset($_GET['sort']) && $_GET['sort'] !== '');
+            
+            if ($has_filters): ?>
+                <div class="no-results">
+                    <p class="no-results-message">V této kategorii nejsou žádné produkty odpovídající vašim filtrům.</p>
+                    <p class="no-results-suggestion">Zkuste změnit filtry nebo <a href="<?php echo $cat ? 'index.php?cat=' . urlencode($cat) : ($sea ? 'index.php?sea=' . urlencode($sea) : 'index.php'); ?>">zobrazit všechny produkty</a>.</p>
+                </div>
+            <?php else: ?>
+                <p class="soon">Již brzy.. 😃</p>
+            <?php endif; ?>
         <?php endif; ?>
         <?php big_popup($items, $endprice, $name); ?>
         <?php if (isset($_SESSION['product_added']) && $_SESSION['product_added']): ?>

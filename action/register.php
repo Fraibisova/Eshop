@@ -32,18 +32,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     // reCAPTCHA
     $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
-    $secretKey = 'recaptcha-secret-key'; 
+    $secretKey = '6LcJ55ErAAAAAJjC3iAlkaN-gn7swVVKyWMVe21P'; 
 
-    if (empty($recaptchaResponse)) {
-        $errors[] = "Musíte potvrdit, že nejste robot.";
-    } else {
-        $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip=" . $_SERVER['REMOTE_ADDR']);
-        $captchaSuccess = json_decode($verify);
+    // if (empty($recaptchaResponse)) {
+    //     $errors[] = "Musíte potvrdit, že nejste robot.";
+    // } else {
+    //     $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip=" . $_SERVER['REMOTE_ADDR']);
+    //     $captchaSuccess = json_decode($verify);
 
-        if (!$captchaSuccess->success) {
-            $errors[] = "Ověření reCAPTCHA selhalo. Zkuste to znovu.";
-        }
-    }
+    //     if (!$captchaSuccess->success) {
+    //         $errors[] = "Ověření reCAPTCHA selhalo. Zkuste to znovu.";
+    //     }
+    // }
 
     $errors = validateRegistrationData($name, $surname, $email, $password, $password_confirm, $terms, $pdo);
 
@@ -97,7 +97,7 @@ header_html($aggregated_cart, "login.php");
                 </div>
 
                 <!-- reCAPTCHA -->
-                <div class="g-recaptcha" data-sitekey="site-key"></div>
+                <div class="g-recaptcha" data-sitekey="6LcJ55ErAAAAAIzmk5F07lj-gFq6QfvIaJG1TXBC"></div>
 
                 <input type="submit" value="Registrovat" class="submit-register"> 
                 <?php if (!empty($errors)): ?>

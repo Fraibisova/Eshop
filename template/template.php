@@ -572,17 +572,13 @@ print('</head>
     
     function renderAnalyticsScript() {
     echo '
-    <!-- Google Analytics s GDPR -->
     <script>
-        // Kontrola souhlasu s cookies
         function hasAnalyticsConsent() {
             return localStorage.getItem("analytics_consent") === "true";
         }
         
-        // Inicializace GA pouze s consent
         function initAnalytics() {
             if (hasAnalyticsConsent()) {
-                // Google Analytics
                 (function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -598,19 +594,15 @@ print('</head>
             }
         }
         
-        // Spuštění při načtení stránky
         document.addEventListener("DOMContentLoaded", initAnalytics);
         
-        // Funkce pro udělení souhlasu
         function grantAnalyticsConsent() {
             localStorage.setItem("analytics_consent", "true");
             initAnalytics();
         }
         
-        // Funkce pro odvolání souhlasu
         function revokeAnalyticsConsent() {
             localStorage.setItem("analytics_consent", "false");
-            // Vymazání GA cookies
             document.cookie = "_ga=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie = "_ga_G-FPWDC70FMW=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         }
@@ -686,7 +678,6 @@ function renderCookieBanner() {
     </style>
     
     <script>
-        // Zobrazení banneru
         if (!localStorage.getItem("cookie_consent")) {
             document.getElementById("cookie-banner").style.display = "block";
         }
@@ -695,7 +686,6 @@ function renderCookieBanner() {
             localStorage.setItem("cookie_consent", "accepted");
             grantAnalyticsConsent();
             
-            // Animace při zavírání
             const banner = document.getElementById("cookie-banner");
             banner.style.animation = "slideDown 0.3s ease-in";
             setTimeout(() => {
@@ -707,7 +697,6 @@ function renderCookieBanner() {
             localStorage.setItem("cookie_consent", "rejected");
             revokeAnalyticsConsent();
             
-            // Animace při zavírání
             const banner = document.getElementById("cookie-banner");
             banner.style.animation = "slideDown 0.3s ease-in";
             setTimeout(() => {
@@ -715,7 +704,6 @@ function renderCookieBanner() {
             }, 300);
         }
         
-        // Přidání animace pro zavírání
         const style = document.createElement("style");
         style.textContent = `
             @keyframes slideDown {
@@ -734,12 +722,10 @@ function renderCookieBanner() {
 }
 
 function render_product_filters($location, $current_filters = []) {
-    // Získání aktuálních hodnot filtrů
     $current_sort = isset($_GET['sort']) ? $_GET['sort'] : '';
     $current_price = isset($_GET['price']) ? $_GET['price'] : '';
     $current_stock = isset($_GET['stock']) ? $_GET['stock'] : '';
     
-    // Počet produktů (můžete nahradit skutečným počtem)
     $product_count = isset($current_filters['count']) ? $current_filters['count'] : 10;
     
     $html = '
@@ -764,9 +750,9 @@ function render_product_filters($location, $current_filters = []) {
                 <div class="filter-dropdown">
                     <select name="stock" id="stock-filter" class="filter-select">
                         <option value="">PODLE DOSTUPNOSTI</option>
-                        <option value="skladem"' . ($current_stock == 'skladem' ? ' selected' : '') . '>Skladem</option>
-                        <option value="predobjednat"' . ($current_stock == 'predobjednat' ? ' selected' : '') . '>K předobjednání</option>
-                        <option value="brzy"' . ($current_stock == 'brzy' ? ' selected' : '') . '>Brzy skladem</option>
+                        <option value="Skladem"' . ($current_stock == 'Skladem' ? ' selected' : '') . '>Skladem</option>
+                        <option value="Předobjednat"' . ($current_stock == 'Předobjednat' ? ' selected' : '') . '>K předobjednání</option>
+                        <option value="Není skladem"' . ($current_stock == 'Není skladem' ? ' selected' : '') . '>Brzy skladem</option>
                     </select>
                 </div>
             </div>
@@ -877,7 +863,7 @@ function render_product_filters($location, $current_filters = []) {
     }
     
     .sort-tab.active {
-        background: #dc3545;
+        background: #2f244f;
         color: white;
     }
     
@@ -944,7 +930,6 @@ function render_product_filters($location, $current_filters = []) {
     
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Obsluha změny filtru ceny
         const priceFilter = document.getElementById("price-filter");
         if (priceFilter) {
             priceFilter.addEventListener("change", function() {
@@ -952,7 +937,6 @@ function render_product_filters($location, $current_filters = []) {
             });
         }
         
-        // Obsluha změny filtru dostupnosti
         const stockFilter = document.getElementById("stock-filter");
         if (stockFilter) {
             stockFilter.addEventListener("change", function() {
@@ -1004,36 +988,35 @@ function get_filter_conditions() {
         $price_range = $_GET['price'];
         switch ($price_range) {
             case '0-500':
-                $conditions[] = "price <= 500";
+                $conditions[] = "price <= :max_price_1";
+                $params['max_price_1'] = 500;
                 break;
             case '500-1000':
-                $conditions[] = "price > 500 AND price <= 1000";
+                $conditions[] = "price > :min_price_2 AND price <= :max_price_2";
+                $params['min_price_2'] = 500;
+                $params['max_price_2'] = 1000;
                 break;
             case '1000-2000':
-                $conditions[] = "price > 1000 AND price <= 2000";
+                $conditions[] = "price > :min_price_3 AND price <= :max_price_3";
+                $params['min_price_3'] = 1000;
+                $params['max_price_3'] = 2000;
                 break;
             case '2000-5000':
-                $conditions[] = "price > 2000 AND price <= 5000";
+                $conditions[] = "price > :min_price_4 AND price <= :max_price_4";
+                $params['min_price_4'] = 2000;
+                $params['max_price_4'] = 5000;
                 break;
             case '5000+':
-                $conditions[] = "price > 5000";
+                $conditions[] = "price > :min_price_5";
+                $params['min_price_5'] = 5000;
                 break;
         }
     }
     
     if (isset($_GET['stock']) && $_GET['stock'] !== '') {
         $stock_filter = $_GET['stock'];
-        switch ($stock_filter) {
-            case 'skladem':
-                $conditions[] = "stock NOT IN ('Není skladem', 'Předobjednat')";
-                break;
-            case 'predobjednat':
-                $conditions[] = "stock = 'Předobjednat'";
-                break;
-            case 'brzy':
-                $conditions[] = "stock = 'Není skladem'";
-                break;
-        }
+        $conditions[] = "stock = :stock_filter";
+        $params['stock_filter'] = $stock_filter;
     }
     
     return ['conditions' => $conditions, 'params' => $params];
@@ -1050,7 +1033,7 @@ function get_sort_order() {
         case 'alphabetical':
             return "ORDER BY name ASC";
         case 'bestselling':
-            return "ORDER BY sales_count DESC";
+            return "ORDER BY amount DESC";
         case 'recommended':
         default:
             return "ORDER BY RAND()"; 
