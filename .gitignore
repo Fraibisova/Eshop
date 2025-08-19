@@ -1,2 +1,6 @@
 node_modules
 vendor
+config.php
+mailer.php
+.env
+oauth.php
