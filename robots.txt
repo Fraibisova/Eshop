@@ -1,0 +1,59 @@
+User-agent: *
+
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /config/
+Disallow: /database/
+Disallow: /logs/
+Disallow: /cache/
+Disallow: /tmp/
+Disallow: /backup/
+Disallow: /cron/
+Disallow: /vendor/
+Disallow: /node_modules/
+
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /kosik/
+Disallow: /objednavka/
+Disallow: /uzivatel/
+Disallow: /account/
+Disallow: /login/
+Disallow: /register/
+Disallow: /wishlist/
+Disallow: /compare/
+Disallow: /porovnani/
+
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
+Disallow: /*?search=
+Disallow: /*?utm_
+Disallow: /*?ref=
+Disallow: /*?gclid=
+Disallow: /*?fbclid=
+
+Disallow: /print/
+Disallow: /pdf/
+Disallow: /*?print=1
+
+Allow: /css/
+Allow: /js/
+Allow: /img/
+Allow: /sitemap.xml
+Allow: /sitemap.php
+
+User-agent: Googlebot
+Allow: /css/
+Allow: /js/
+Allow: /img/
+
+User-agent: facebookexternalhit
+Allow: /img/
+
+User-agent: *
+Crawl-delay: 1
+
+Sitemap: https://touchthemagic.com/sitemap.xml
+Sitemap: https://touchthemagic.com/sitemap.php
+
