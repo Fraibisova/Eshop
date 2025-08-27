@@ -1,0 +1,19 @@
+RewriteEngine On
+
+Options -Indexes
+
+RewriteCond %{THE_REQUEST} \s/public/admin/
+RewriteRule ^public/admin/(.*)$ /admin/$1 [R=302,L]
+
+RewriteRule ^admin/(.*)$ public/index.php [L,QSA]
+
+RewriteRule ^public/admin/newsletter/newsletter_preview\.html$ public/admin/newsletter/newsletter_preview.html [L]
+
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteCond %{REQUEST_URI} !^/public/admin/
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^public/(.*)$ public/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/index.php [L,QSA]

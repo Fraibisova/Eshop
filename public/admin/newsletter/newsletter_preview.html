@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            body{
+                font-family: "Roboto", sans-serif;
+                background-color: white;
+            }
+            .main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 30px;
+            }
+            .row{
+                display: flex;
+                width: 600px;
+                flex-direction: column;
+                align-items: center;
+            }
+            .title{
+                border-top: solid;
+                border-bottom: solid;
+                border-color: lightgray;
+                margin-top: 20px;
+                text-transform: uppercase;
+                font-size: 10px;
+                font-weight: 700;
+            }
+            h1{
+                padding: 15px;
+            }
+            h2{
+                font-size: 15px;
+                text-transform: uppercase;
+                background-color: #251d3c;
+                color: white;
+                font-weight: 500;
+                padding-right: 30px;
+                padding-left: 30px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                letter-spacing: 4px;
+                margin-top: 40px;
+            }
+            .title3{
+                color: #251d3c;
+                font-size: 30px;
+                font-weight: 600;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .newsletter_img{
+                width: 100%;
+            }
+            .textbox{
+                font-size: 12px;
+                background: #e5d7ee;
+                margin-top: 30px;
+                margin-bottom: 30px;
+                padding: 15px;
+                width: 570px;
+                text-align: justify;
+            }
+            .link a{
+                background-color: #251d3c;
+                color: white;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 15px;
+                text-decoration: none;
+                padding: 10px;
+                padding-left: 50px;
+                padding-right: 50px;
+                margin-bottom: 30px;
+            }
+            .link a:hover{
+                background-color: #9f8faa;
+            }
+            .product, .products{
+                display: flex;
+            }
+            .products{
+                flex-direction: row;
+            }
+            .product{
+                flex-direction: column;
+                align-items: center;
+            }
+            .product img{
+                width: 150px;
+            }
+            .product a{
+                text-decoration: none;
+            }
+            .more{
+                background-color: #251d3c;
+                text-transform: uppercase;
+                font-weight: 600;
+                color: white;
+                font-size: 13px;
+                padding: 10px;
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+            .more:hover{
+                background-color: #9f8faa;
+                cursor: pointer;
+            }
+            .info{
+                font-weight: 600;
+                color: black;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            .des{
+                font-size: 13px;
+            }
+            .info:hover{
+                color: #9f8faa;
+            }
+            .about_us_div{
+                display: flex;
+                flex-direction: column;
+                width: 33%;
+                text-align: center;
+                align-items: center;
+            }
+            .about_us_border{
+                border-right-style: solid;
+                border-right-width: 1px;
+                border-right-color: #9f8faa;
+            }
+            .about_us{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                margin-top: 50px;
+                background-color: #251d3c;
+                color: white;
+            }
+            .darker{
+                font-size: 25px;
+                font-weight: 600;
+                margin: 0;
+            }
+            .lighter{
+                margin: 0;
+                margin-top: 25px;
+                margin-bottom: 10px;
+            }
+            .about_us svg{
+                width: 50px;
+                height: 50px;
+                margin-top: 20px;
+                display: flex;
+                align-items: flex-end;
+            }
+            .special_lighter{
+                margin-top: 50px !important;
+            }
+            .heart{
+                margin-top: 5px !important;
+                padding-bottom: 10px;
+                margin-bottom: 25px;
+            }
+            .soc{
+                flex-direction: row;
+                margin-top: 50px;
+                display: flex;
+                justify-content: center;
+                margin-bottom: 35px;
+            }
+            .left{
+                width: 60%;
+            }
+            .right{
+                width: 20%;
+                display: flex;
+                justify-content: center;
+                margin-left: 25px;
+            }
+            .right img{
+                width: 150px;
+            }
+            .left img{
+                width: 50px;
+                margin-right: 5px;
+            }
+            .left h3{
+                font-size: 43px;
+                margin-top: 0px;
+            }
+            .footer{
+                width: 600px;
+                margin: 0 auto;
+                flex-direction: row;
+                background-color: #e5d7ee;
+                margin-bottom: 0px;
+            }
+            .inside_footer{
+                padding: 20px;
+                text-align: center;
+
+            }
+            .inside_footer a, .inside_footer p{
+                color: #251d3c;
+                text-decoration: none;
+                border-right-style: solid;
+                border-right-color: #9f8faa;
+                border-right-width: 1.5px;
+                padding-right: 6px;
+                font-size: 15px;
+            }
+            .inside_footer p{
+                float: left;
+                margin: 0px;
+            }
+            .inside_footer a:hover{
+                color: #9f8faa;
+            }
+            .inside_footer .end{
+                border-right-style: none;
+            }
+            .tel{
+                margin-left: -18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="row logo_main">
+                <img alt="logo" src="https://touchthemagic/web_images/logo/darklogo.png">
+            </div>
+            <div class="row title">
+                <h1>Test Titulek</h1>
+            </div>
+            <div class="row title2">
+                <h2>Test Podtitulek</h2>
+            </div>
+            <div class="row title3">
+                <p>Test úvod...</p>
+            </div>
+            <div class="row">
+                <img class="newsletter_img"alt="obrazek" src="https://via.placeholder.com/600x300">
+            </div>
+            <div class="row textbox">
+                <p>Test obsah newsletteru...</p>
+            </div>
+            <div class="row link">
+                <a href="Navštívit obchod">Eshop</a>
+            </div>
+            <div class="row products">
+                
+                <div class="product">
+                    <img alt="produkt" src="{{image}}">
+                    <a href="{{link}}" class="info">{{title}}</a>
+                    <a href="{{link}}" class="info des">{{description}}</a>
+                    <a class="more">Více</a>
+                </div>
+                
+            </div>
+            <div class="row about_us">
+                <div class="about_us_div about_us_border">
+                    <p class="lighter">Poštovné</p>
+                    <p class="darker">od 60kč</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982"></path>
+                        <path d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4zm0 1H7.5v3h-6zM8.5 4V1h3.75l2.25 3zM15 5v10H1V5z"></path>
+                    </svg>                
+                </div>
+                <div class="about_us_div about_us_border">
+                    <p class="lighter">Doprava zdarma</p>
+                    <p class="darker">od 1000kč</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"></path>
+                    </svg>                
+                </div>
+                <div class="about_us_div">
+                    <p class="lighter special_lighter">Ručně vyrobeno</p>
+                    <p class="darker">Každý kus je originál</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="heart" viewBox="0 0 16 16">
+                        <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.6 7.6 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"></path>
+                    </svg>                
+                </div>
+            </div>
+            <div class="row soc">
+                <div class="left">
+                    <h3>Zůstaňte s námi v kontaktu</h3>
+                    <a href=""><img alt="instagram" src="https://touchthemagic/web_images/logo/instagram.png"></a>
+                    <a href=""><img alt="facebook" src="https://touchthemagic/web_images/logo/facebook.png"></a>
+                    <a href=""><img alt="tiktok" src="https://touchthemagic/web_images/logo/tiktok.png"></a>
+                    <a href=""><img alt="pinterest" src="https://touchthemagic/web_images/logo/pinterest.png"></a>
+                    <a href=""><img alt="youtube" src="https://touchthemagic/web_images/logo/youtube.png"></a>
+                    <a href=""><img alt="linkedin" src="https://touchthemagic/web_images/logo/linkedin.png"></a>
+                </div>
+                <div class="right">
+                    <img alt="logo kralik" src="https://touchthemagic/web_images/logo/darkicon.png">
+                </div>
+            </div>
+            <div class="row footer">
+                <div class="inside_footer">
+                    <p>Název s.r.o</p>
+                    <a href="" class="tel">+420 747 473 938</a>
+                    <a href="">info@touchthemagic.cz</a>
+                    <a href="">registrace na e-shopu</a>
+                    <a href="">podmínky</a>
+                    <a href="" class="end">odhlásit se</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

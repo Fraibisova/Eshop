@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Configuration files
+config.php
+config/*.php
+mailer.php
+.env
+.env.*
+oauth.php
+
+# API tokens and secrets
+*token*
+*secret*
+*key*
+*api*
+oauth_config.php
+
+# Log files
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Debug files
+*debug*
+*test*.php
+test_*.php
+
+# Cache files
+cache/
+*.cache
+
+# Backup files
+*.backup
+*_backup.*
+backup/
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Upload directories (exclude user uploads)
+uploads/
+public/uploads/
+
+# Session files
+sessions/
+*.sess
+
+# Error logs
+error.log
+error_log
+php_errors.log
+
+# Specific action files 
+action/forgot_password.php
+action/register.php
